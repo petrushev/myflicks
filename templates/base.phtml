@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  {% block styles  %}
+    <link rel="icon" href="{{cdn}}/img/favicon.ico" type="image/x-icon" />
+    <link rel="Shortcut Icon" href="{{cdn}}/favicon.ico" />
+
+    <link href="{{cdn}}/css/blueprint.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="{{cdn}}/css/default.css" media="all" rel="stylesheet" type="text/css" />
+  {% endblock %}
+
+  {% block scripts %}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js" ></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <link href="{{cdn}}/css/jquery-ui-1.9.cupertino.min.css" media="all" rel="stylesheet" type="text/css" />
+    <style>
+      .ui-widget {font-size: 80%}
+    </style>
+    {# <script type="text/javascript" src="{{cdn}}/js/default.js" language="javascript"></script> #}
+  {% endblock %}
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="description" content="{% block meta_desc %}{% endblock %}" />
+  <meta name="keywords" content="{% block meta_keywords %}{% endblock %}" />
+
+  {% block head_rest %}{% endblock %}
+</head>
+
+<body>
+  <div class="container">
+  {% block body %}
+      <div class="span-24 last" id="main_header" >
+      {% block header %}{% endblock %}
+      </div>
+
+      <div class="span-24 last" >
+      {% block middle %}
+        <div class="span-18"  id="main_body" >
+        {% block main_body %}{% endblock %}
+        </div>
+
+        <div class="span-6 last"  id="right_col" >
+        {% block right_col %}{% endblock %}
+        </div>
+      {% endblock %}
+      </div>
+
+      <div  class="span-24 last" id="main_footer" >
+      {% block footer %}{% endblock %}
+      </div>
+
+  {% endblock %}
+  </div>
+</body>
+</html>

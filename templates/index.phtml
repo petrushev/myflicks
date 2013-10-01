@@ -1,0 +1,11 @@
+{% extends 'default.phtml' %}
+{% import 'macros.phtml' as macros %}
+
+{% block head_rest %}
+  <meta name="google-site-verification" content="" />
+{% endblock %}
+
+{% block main_body %}
+   {{ macros.search_box(q, tr) }}
+
+{% endblock %}

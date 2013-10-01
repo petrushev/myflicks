@@ -1,0 +1,55 @@
+{% extends 'base.phtml' %}
+
+{% block title %}My Flick{% endblock %}
+
+{% block scripts %}
+  <script>var cdn="{{cdn}}";</script>
+  {{super() }}
+  <script>
+    $(document).ready(function(){
+      $(".button").button();
+      $(".buttonset").buttonset();
+      $("input[type=submit]").button();
+    });
+
+    function getCachedJson(url, callback) {
+      var body = $('body');
+      var cache = body.data(url);
+      if (cache) {
+        callback(cache);
+      } else {
+        $.getJSON(url, {}, function(json) {
+          body.data(url, json);
+          callback(json);
+        });
+      }
+    }
+  </script>
+{% endblock %}
+
+{% block header %}
+  <div id="main_menu" >
+  {% block menu %}
+    <a href="/" class="button" >Home</a>
+  {% endblock %}
+  </div>
+{% endblock %}
+
+{% block right_col %}
+  {% block user_box %}
+
+    {% if user is none %}
+    <div>
+      Login: <br/>
+      <a href="/login/g/{{path[1:]}}" title="google"><img src="{{cdn}}/img/g-icon.png" /></a>
+    </div>
+    {% else %}
+      <div style="margin-top: 30px;">
+        welcome, {{ user.fullname }}
+        <div style="float:right;">
+          <a href="/login/logout/{{path[1:]}}" class="button">Logout</a>
+        </div>
+      </div>
+    {% endif %}
+  {% endblock %}
+{% endblock %}
