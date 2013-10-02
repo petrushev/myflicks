@@ -10,7 +10,9 @@ routes = [
         Rule('/login/logout', defaults = {'original_url': ''}, endpoint = 'logout', methods = ['GET']),
         Rule('/login/logout/<path:original_url>', endpoint='logout', methods=['GET'])]),
     EndpointPrefix('mgmt|', [
-        Rule('/mgmt/update/movies', endpoint='update_movies', methods=['GET'])])
+        Rule('/mgmt/update/movies', endpoint='update_movies', methods=['GET'])]),
+    EndpointPrefix('search|', [
+        Rule('/autocomplete/movie/<path:q>', endpoint='auto_movie', methods=['GET'])])
 ]
 
 url_map = Map(routes, strict_slashes = False)

@@ -1,11 +1,57 @@
 {% extends 'default.phtml' %}
 {% import 'macros.phtml' as macros %}
 
+{% block scripts %}
+  {{ super() }}
+  <script src="{{cdn}}/js/rateit/jquery.rateit.min.js" ></script>
+  <link href="{{cdn}}/js/rateit/rateit.css" media="all" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block head_rest %}
   <meta name="google-site-verification" content="" />
 {% endblock %}
 
 {% block main_body %}
-   {{ macros.search_box(q, tr) }}
+	<div id="search_box" >
+	  Search:
+      <input type="input" name="q" value="{{q|e}}" />
+	</div>
 
+   <div id="results" >
+   </div>
+   <script>
+var search_box = $("div#search_box input[name=q]");
+var results_div = $("div#results");
+
+search_box.keyup(function(event){
+  var q = search_box.val();
+  if (q.length > 2) {
+    getCachedJson('/autocomplete/movie/'+encodeURIComponent(q), function(json){
+      var html = '';
+      $.each(json, function(id, item) {
+        html = html + '<div id="movie_'+item[0]+'" ><a class="title" href="/movie/'+item[0]+'-_" >'+
+            item[1] + '</a><span class="rateit" ></span></div>';
+      });
+
+      results_div.html(html);
+      $("span.rateit").rateit();
+    });
+  } else {
+    results_div.html('');
+  }
+});
+
+$("span.rateit").live("rated", function() {
+  var rater = $(this);
+  var movie_id = rater.parents("div[id^=movie_]").attr('id').replace('movie_','');
+  var rating = rater.rateit('value')*2;
+  $.post('/user/rate', {movie_id: movie_id, rating: rating}, function(response){});
+
+});
+
+$("span.rateit").live("reset", function() {
+  //console.debug(this); // TODO
+});
+
+   </script>
 {% endblock %}
