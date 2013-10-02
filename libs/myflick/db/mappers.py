@@ -21,6 +21,6 @@ mappers, tables, Session = reflect(engine, models)
 
 mappers['Rating'].add_properties({
     'movie': relationship(models.Movie,
-                          backref=backref('ratings', order_by=models.Rating.rated)),
+                          backref=backref('ratings', order_by=models.Rating.rated.desc())),
     'user': relationship(models.User,
-                         backref=backref('ratings', order_by=models.Rating.rated))})
+                         backref=backref('ratings', order_by=models.Rating.rated.desc()))})

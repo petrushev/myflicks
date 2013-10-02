@@ -28,13 +28,22 @@ search_box.keyup(function(event){
   if (q.length > 2) {
     getCachedJson('/autocomplete/movie/'+encodeURIComponent(q), function(json){
       var html = '';
+      var ratings = {};
       $.each(json, function(id, item) {
-        html = html + '<div id="movie_'+item[0]+'" ><a class="title" href="/movie/'+item[0]+'-_" >'+
-            item[1] + '</a><span class="rateit" ></span></div>';
+        html = html + '<div class="movie" id="movie_'+item[0]+'" ><span class="span-8"><a class="title" href="/movie/' +
+             item[0] + '-_" >' +
+             item[1] + '</a></span><span class="rateit" ></span></div>';
+        ratings[item[0]] = item[3];
       });
 
       results_div.html(html);
       $("span.rateit").rateit();
+      $.each($("div.movie"), function(_, div){
+        var movie_id = $(div).attr('id').replace('movie_','');
+        $(div).find("span.rateit").rateit('value', ratings[movie_id]*.5);
+      });
+
+      $('div.movie :even').css('background-color', '#d7ebf9');
     });
   } else {
     results_div.html('');
@@ -43,7 +52,7 @@ search_box.keyup(function(event){
 
 $("span.rateit").live("rated", function() {
   var rater = $(this);
-  var movie_id = rater.parents("div[id^=movie_]").attr('id').replace('movie_','');
+  var movie_id = rater.parents("div.movie").attr('id').replace('movie_','');
   var rating = rater.rateit('value')*2;
   $.post('/user/rate', {movie_id: movie_id, rating: rating}, function(response){});
 

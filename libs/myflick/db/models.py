@@ -1,4 +1,5 @@
 from urlparse import urlparse
+from datetime import datetime
 
 from werkzeug.urls import url_quote
 from jinja2 import escape as html_escape
@@ -35,6 +36,25 @@ class User(BaseModel):
     @property
     def alias_repr(self):
         return url_quote(self.alias.replace(' ', '_'), safe='')
+
+    def set_rating(self, movie, rating):
+        try:
+            r = Rating.load(self.session, user=self, movie=movie)
+        except NoResultFound:
+            self.session.add(Rating(user=self, movie=movie,
+                                    rating=rating, rated=datetime.utcnow()))
+            self.session.flush()
+        else:
+            r.rating = rating
+            r.rated = datetime.utcnow()
+
+    def drop_rating(self, movie):
+        try:
+            r = Rating.load(self.session, user=self, movie=movie)
+        except NoResultFound:
+            pass
+        else:
+            r.drop()
 
 class Movie(BaseModel):
     pass

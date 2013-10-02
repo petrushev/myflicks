@@ -12,7 +12,9 @@ routes = [
     EndpointPrefix('mgmt|', [
         Rule('/mgmt/update/movies', endpoint='update_movies', methods=['GET'])]),
     EndpointPrefix('search|', [
-        Rule('/autocomplete/movie/<path:q>', endpoint='auto_movie', methods=['GET'])])
+        Rule('/autocomplete/movie/<path:q>', endpoint='auto_movie', methods=['GET'])]),
+    EndpointPrefix('rating|', [
+        Rule('/user/rate', endpoint='user_rate', methods=['POST'])])
 ]
 
 url_map = Map(routes, strict_slashes = False)
