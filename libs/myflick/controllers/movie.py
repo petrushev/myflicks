@@ -11,7 +11,6 @@ class Controller(BaseController):
             return
 
         meta = movie.get_meta()
-        print type(meta), meta
         self.view.update({'movie': movie,
                           'meta': meta})
         self.template = 'partials/movie.phtml'

@@ -107,6 +107,7 @@ ALTER TABLE ONLY rating
     ADD CONSTRAINT fk_rating_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 -- restructured movie table
+delete from rating;
 delete from movie;
 
 ALTER TABLE movie

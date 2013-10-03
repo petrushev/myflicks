@@ -1,4 +1,5 @@
 from datetime import datetime
+from sys import stdout
 from json import loads as json_loads
 from json import dumps as json_dumps
 
@@ -55,6 +56,7 @@ class User(BaseModel):
             pass
         else:
             r.drop()
+            self.session.flush()
 
 class Movie(BaseModel):
 
@@ -71,8 +73,9 @@ class Movie(BaseModel):
         q = requests.get("http://www.omdbapi.com/?s=%s&y=%d&r=JSON" % (qtitle, self.year))
         try:
             q = json_loads(q.content)['Search']
+
         except KeyError:
-            print "http://www.omdbapi.com/?s=%s&y=%d&r=JSON" % (qtitle, self.year)
+            stdout.write("Error fetching: http://www.omdbapi.com/?s=%s&y=%d&r=JSON \n" % (qtitle, self.year))
             self.meta = json_dumps({})
             self.session.flush()
             return
@@ -93,4 +96,11 @@ class Movie(BaseModel):
         return self.meta
 
 class Rating(BaseModel):
-    pass
+
+    @staticmethod
+    def last_rated(session, limit=10):
+        # TODO add rating.rated index
+        res = session.query(User, Movie.id, Movie.title, Rating.rating)\
+                     .join(Rating).join(Movie)\
+                     .order_by(Rating.rated.desc()).limit(limit).all()
+        return res

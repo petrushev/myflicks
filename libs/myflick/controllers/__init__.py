@@ -8,7 +8,7 @@ from werkzeug.wrappers import Response
 
 from sqlalchemy.orm.exc import NoResultFound
 
-from myflick.db.models import User
+from myflick.db.models import User, Rating
 
 COOKIE_SALT = 'flickcook'
 
@@ -66,6 +66,8 @@ class BaseController(object):
         # rest of the initializers (db, session, etc)
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
+
+        self.view['last_rated'] = Rating.last_rated(self.session, limit=5)
 
         # check user data
         self.user = None

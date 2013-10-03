@@ -1,6 +1,12 @@
-{% if meta %}
 <div>
+{% if meta %}
   <h4>{{meta['Title'] ~' ('~ meta['Year'] ~')'}}</h4>
+  <div>Director: {{meta['Director']}}, Screenwriter: {{meta['Writer']}}</div>
+  <div>Actors: {{meta['Actors']}}</div>
   <img src="{{meta['Poster']}}" />
-</div>
+
+{% else %}
+  <h4>{{movie.title ~' ('~ movie.year ~')'}}</h4>
 {% endif %}
+
+</div>
