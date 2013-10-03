@@ -19,6 +19,10 @@
 
    <div id="results" >
    </div>
+
+   <div id='partial' >
+   </div>
+
    <script>
 var search_box = $("div#search_box input[name=q]");
 var results_div = $("div#results");
@@ -60,6 +64,23 @@ $("span.rateit").live("rated", function() {
 
 $("span.rateit").live("reset", function() {
   //console.debug(this); // TODO
+});
+
+var movie_partials = {};
+$("div.movie").live("mouseenter", function() {
+  var movie_id = $(this).attr("id").replace('movie_','');
+
+  var partial = movie_partials[movie_id];
+  if (partial) {
+      $("div#partial").html(partial);
+
+  } else {
+    $.get('/movie/partial/'+movie_id, {}, function(response) {
+      $("div#partial").html(response);
+      movie_partials[movie_id] = response;
+    });
+  }
+
 });
 
    </script>

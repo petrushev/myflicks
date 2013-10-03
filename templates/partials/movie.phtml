@@ -1,0 +1,6 @@
+{% if meta %}
+<div>
+  <h4>{{meta['Title'] ~' ('~ meta['Year'] ~')'}}</h4>
+  <img src="{{meta['Poster']}}" />
+</div>
+{% endif %}

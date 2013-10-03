@@ -105,3 +105,21 @@ ALTER TABLE ONLY rating
 
 ALTER TABLE ONLY rating
     ADD CONSTRAINT fk_rating_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+-- restructured movie table
+delete from movie;
+
+ALTER TABLE movie
+  DROP CONSTRAINT u_movie;
+ALTER TABLE movie
+  DROP CONSTRAINT u_movie_url;
+ALTER TABLE movie
+  DROP CONSTRAINT ch_movie_url;
+ALTER TABLE movie
+  DROP COLUMN url;
+ALTER TABLE movie
+  ADD COLUMN imdbid character varying(31);
+ALTER TABLE movie
+  ADD COLUMN year smallint NOT NULL;
+ALTER TABLE movie
+  ADD CONSTRAINT u_movie UNIQUE (title, year);
