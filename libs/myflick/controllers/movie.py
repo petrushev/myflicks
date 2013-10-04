@@ -11,8 +11,9 @@ class Controller(BaseController):
         except NoResultFound:
             return
 
+        meta = movie.get_meta()
         self.view.update({'movie': movie,
-                          'meta': movie.get_meta()})
+                          'meta': meta})
         self.template = 'partials/movie.phtml'
 
     def show(self, movie_id, dummy):
