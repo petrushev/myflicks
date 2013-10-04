@@ -13,11 +13,12 @@
   <h4>{{meta['Title'] ~' ('~ meta['Year'] ~')'}}</h4>
   <div>Director: {{meta['Director']}}, Screenwriter: {{meta['Writer']}}</div>
   <div>Actors: {{meta['Actors']}}</div>
-  <img src="{{meta['Poster']}}" />
 
 {% else %}
   <h4>{{movie.title ~' ('~ movie.year ~')'}}</h4>
 {% endif %}
-
+  <div>
+    <img width=300 src="{{movie.get_image()}}" />
+  </div>
 </div>
 {% endmacro %}

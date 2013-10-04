@@ -3,7 +3,7 @@ from sys import stdout
 from json import loads as json_loads
 from json import dumps as json_dumps
 
-from werkzeug.urls import url_quote
+from werkzeug.urls import url_quote, url_quote_plus
 from sqlalchemy.orm.exc import NoResultFound
 import requests
 
@@ -97,6 +97,25 @@ class Movie(BaseModel):
 
         return json_loads(self.meta)
 
+    def image_fetch(self):
+        q = '"%s" %d poster' % (self.title, self.year)
+        q = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + url_quote_plus(q)
+        q = requests.get(q)
+        q = json_loads(q.content)
+        q = q['responseData']['results']
+        for item in q:
+            img = item['url']
+            if 'imdb' not in img.lower() and 'impawards' not in img.lower():
+                self.img = img
+                return
+
+    def get_image(self):
+        if self.img is None:
+            self.image_fetch()
+            if self.img is None:
+                return ''
+
+        return self.img
 
 class Rating(BaseModel):
 

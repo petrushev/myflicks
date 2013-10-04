@@ -4,8 +4,10 @@
 {% block scripts %}
   {{ super() }}
   <script src="{{cdn}}/js/index.js" ></script>
-  <script src="{{cdn}}/js/rateit/jquery.rateit.min.js" ></script>
-  <link href="{{cdn}}/js/rateit/rateit.css" media="all" rel="stylesheet" type="text/css" />
+  {% if user %}
+    <script src="{{cdn}}/js/rateit/jquery.rateit.min.js" ></script>
+    <link href="{{cdn}}/js/rateit/rateit.css" media="all" rel="stylesheet" type="text/css" />
+  {% endif %}
   <style>
     div.movie {margin-top:7px; margin-bottom:7px;}
   </style>

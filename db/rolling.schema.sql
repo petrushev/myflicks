@@ -124,3 +124,6 @@ ALTER TABLE movie
   ADD COLUMN year smallint NOT NULL;
 ALTER TABLE movie
   ADD CONSTRAINT u_movie UNIQUE (title, year);
+
+ALTER TABLE movie
+  ADD COLUMN img text;

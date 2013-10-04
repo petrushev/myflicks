@@ -7,12 +7,14 @@
   </div>
 
   <div class="span-8" >
-    <h4>Average rating</h4>
-      <b>{{avg_rating}}</b> stars
-    <h4>Last ratings</h4>
-    {% for rating, user in last_ratings %}
-      <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a> gave {{rating*0.5}} stars
-    {% endfor %}
+    {% if avg_rating %}
+      <h4>Average rating</h4>
+        <b>{{avg_rating}}</b> stars
+      <h4>Last ratings</h4>
+      {% for rating, user in last_ratings %}
+        <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a> gave {{rating*0.5}} stars
+      {% endfor %}
+    {% endif %}
   </div>
 
 {% endblock %}
