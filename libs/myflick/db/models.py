@@ -105,6 +105,8 @@ class Movie(BaseModel):
         q = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + url_quote_plus(q)
         q = requests.get(q)
         q = json_loads(q.content)
+        if q is None:
+            return
         try:
             q = q['responseData']['results']
         except KeyError:
