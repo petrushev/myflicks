@@ -92,8 +92,11 @@ class Movie(BaseModel):
             if self.meta is None:
                 return {}
 
-            return json_loads(self.meta)
-        return self.meta
+        if type(self.meta) is dict:
+            return self.meta
+
+        return json_loads(self.meta)
+
 
 class Rating(BaseModel):
 
