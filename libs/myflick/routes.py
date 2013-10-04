@@ -16,7 +16,11 @@ routes = [
     EndpointPrefix('rating|', [
         Rule('/user/rate', endpoint='user_rate', methods=['POST'])]),
     EndpointPrefix('movie|', [
-        Rule('/movie/partial/<int:movie_id>', endpoint='partial', methods=['GET'])])
+        Rule('/movie/partial/<int:movie_id>', endpoint='partial', methods=['GET']),
+        Rule('/movie/<int:movie_id>-<path:dummy>', endpoint='show', methods=['GET'])]),
+    EndpointPrefix('user|', [
+        Rule('/user/<int:user_id>-<path:dummy>', endpoint='show', methods=['GET']),
+        Rule('/home', endpoint='home', methods=['GET'])])
 ]
 
 url_map = Map(routes, strict_slashes = False)
