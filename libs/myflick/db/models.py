@@ -2,12 +2,15 @@ from datetime import datetime
 from sys import stdout
 from json import loads as json_loads
 from json import dumps as json_dumps
+from operator import and_
 
 from werkzeug.urls import url_quote, url_quote_plus
 from sqlalchemy.orm.exc import NoResultFound
 import requests
 
 from myflick.db import BaseModel
+
+forbidden_domains = ('collider', 'impawards', 'imdb')
 
 class User(BaseModel):
 
@@ -102,10 +105,16 @@ class Movie(BaseModel):
         q = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + url_quote_plus(q)
         q = requests.get(q)
         q = json_loads(q.content)
-        q = q['responseData']['results']
+        try:
+            q = q['responseData']['results']
+        except KeyError:
+            return
         for item in q:
             img = item['url']
-            if 'imdb' not in img.lower() and 'impawards' not in img.lower():
+            img_lower = img.lower()
+            cond = [forbidden not in img_lower
+                    for forbidden in forbidden_domains]
+            if reduce(and_, cond):
                 self.img = img
                 return
 
