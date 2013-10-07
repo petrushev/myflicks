@@ -6,7 +6,6 @@ from myflick.db.models import Movie, Rating
 class Controller(BaseController):
 
     def auto_movie(self, q):
-        # TODO : add db index
         q = q.lstrip().lower()
         if q.startswith('the '):
             q = q[4:]
@@ -17,5 +16,4 @@ class Controller(BaseController):
                   .filter(target.ilike('%% %s%%' % q))\
                   .order_by(func.similarity(func.lower(target), q).desc())\
                   .limit(7).all()
-
         self.return_json(res)

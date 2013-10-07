@@ -130,7 +130,6 @@ class Rating(BaseModel):
 
     @staticmethod
     def last_rated(session, limit=10):
-        # TODO add rating.rated index
         res = session.query(User, Movie.id, Movie.title, Rating.rating)\
                      .join(Rating).join(Movie)\
                      .order_by(Rating.rated.desc()).limit(limit).all()

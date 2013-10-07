@@ -127,3 +127,13 @@ ALTER TABLE movie
 
 ALTER TABLE movie
   ADD COLUMN img text;
+
+-- added custom query indexes
+
+
+CREATE INDEX i_rating_rated
+  ON rating USING btree
+  (rated);
+CREATE INDEX i3_movie
+  ON movie USING gist
+  ((' '||title) COLLATE pg_catalog."default" gist_trgm_ops);
