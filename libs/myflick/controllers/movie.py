@@ -1,5 +1,5 @@
-import json
 import requests
+from json import loads as json_loads
 from werkzeug.urls import url_quote
 
 from sqlalchemy.orm.exc import NoResultFound
@@ -7,7 +7,6 @@ from sqlalchemy.sql.expression import and_
 
 from myflick.controllers import BaseController
 from myflick.db.models import Movie, Rating, User
-
 
 class Controller(BaseController):
 
@@ -39,6 +38,13 @@ class Controller(BaseController):
         else:
             avg_rating = sum(r.rating for r in last_ratings) * .5 / len(last_ratings)
 
+        # user rating
+        if self.user is not None:
+            try:
+                self.view['rating'] = Rating.load(self.session, movie=movie, user=self.user)
+            except NoResultFound:
+                pass
+
         self.view.update({'movie': movie,
                           'meta': movie.get_meta(),
                           'last_ratings': last_ratings,
@@ -58,7 +64,7 @@ class Controller(BaseController):
             q = requests.get("http://www.omdbapi.com/?i=%s&r=JSON" % imdbid)
             content = q.content
             del q
-            content_json = json.loads(content)
+            content_json = json_loads(content)
             title = content_json['Title']
             year = int(content_json['Year'].strip())
 
