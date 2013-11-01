@@ -1,0 +1,17 @@
+{% extends 'default.phtml' %}
+
+{% block scripts %}
+  <style>
+    div.movie {margin-top:7px; margin-bottom:7px;}
+  </style>
+{% endblock %}
+
+{% block main_body %}
+    <div class="span-17" >
+      enter imdb link:
+      <form method="post" >
+        <input type="text" name="imdb" />
+        <input type="submit" value="search" />
+      </form>
+    </div>
+{% endblock %}

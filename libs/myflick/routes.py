@@ -17,7 +17,9 @@ routes = [
         Rule('/user/rate', endpoint='user_rate', methods=['POST'])]),
     EndpointPrefix('movie|', [
         Rule('/movie/partial/<int:movie_id>', endpoint='partial', methods=['GET']),
-        Rule('/movie/<int:movie_id>-<path:dummy>', endpoint='show', methods=['GET'])]),
+        Rule('/movie/<int:movie_id>-<path:dummy>', endpoint='show', methods=['GET']),
+        Rule('/movie/missing', endpoint='missing', methods=['GET']),
+        Rule('/movie/missing', endpoint='fill_missing', methods=['POST'])]),
     EndpointPrefix('user|', [
         Rule('/user/<int:user_id>-<path:dummy>', endpoint='show', methods=['GET']),
         Rule('/home', endpoint='home', methods=['GET'])])

@@ -1,7 +1,13 @@
-from myflick.controllers import BaseController
-from myflick.db.models import Movie, Rating, User
+import json
+import requests
+from werkzeug.urls import url_quote
+
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql.expression import and_
+
+from myflick.controllers import BaseController
+from myflick.db.models import Movie, Rating, User
+
 
 class Controller(BaseController):
 
@@ -38,3 +44,35 @@ class Controller(BaseController):
                           'last_ratings': last_ratings,
                           'avg_rating': avg_rating})
         self.template = 'movie.phtml'
+
+    def missing(self):
+        self.template = 'missing.phtml'
+
+    def fill_missing(self):
+        imdb_link = self.request.form['imdb'].lower()
+        if 'imdb.com' not in imdb_link:
+            return self.redirect('/movie/missing')
+
+        try:
+            imdbid = imdb_link.split("title/")[1].split("/")[0]
+            q = requests.get("http://www.omdbapi.com/?i=%s&r=JSON" % imdbid)
+            content = q.content
+            del q
+            content_json = json.loads(content)
+            title = content_json['Title']
+            year = int(content_json['Year'].strip())
+
+        except Exception, _:
+            return self.redirect('/movie/missing')
+
+        try:
+            movie = Movie.load(self.session, title=title, year=year)
+        except NoResultFound:
+            movie = Movie(title=title, year=year, meta=content, imdbid=imdbid)
+            self.session.add(movie)
+            self.session.flush()
+        else:
+            movie.meta=content
+            movie.imdbid=imdbid
+
+        return self.redirect('/movie/%d-%s' % (movie.id, url_quote(movie.title)))
