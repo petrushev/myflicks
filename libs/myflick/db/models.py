@@ -10,7 +10,7 @@ import requests
 
 from myflick.db import BaseModel
 
-forbidden_domains = ('collider', 'impawards', 'imdb')
+forbidden_domains = ('collider', 'impawards', 'imdb', 'dbcovers')
 
 class User(BaseModel):
 
