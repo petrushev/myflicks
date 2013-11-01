@@ -11,6 +11,13 @@ from jinja2.environment import Environment
 from jinja2.loaders import FileSystemLoader
 from jinja2.bccache import FileSystemBytecodeCache
 
+try:
+    import psycopg2
+except ImportError:
+    from psycopg2ct import compat
+    compat.register()
+    import psycopg2
+
 from myflick.routes import url_map
 from myflick.db.mappers import Session
 
