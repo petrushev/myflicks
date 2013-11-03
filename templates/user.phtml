@@ -4,19 +4,19 @@
   <div>
     User:
     <h4>{{user_.alias|e}}</h4>
-    <div class="span-10" >
+    <div class="span-16" >
       <a href="#" id="last_first" >new ratings first</a> |
      <a href="#" id="best_first" >high ratings first</a>
     </div> <br/> <br/>
 
-    <div class="span-10" id="last_first_">
+    <div class="span-16" id="last_first_">
       {% for movie, rating in ratings1 %}
       <div><a href="/movie/{{movie.id~'-'~url_quote(movie.title)}}">
         {{movie.title|e}}</a> - gave <b>{{rating*0.5}}</b> stars </div>
       {% endfor %}
     </div>
 
-    <div class="span-10 hidden" id="best_first_">
+    <div class="span-16 hidden" id="best_first_">
       {% for movie, rating in ratings2 %}
       <div><a href="/movie/{{movie.id~'-'~url_quote(movie.title)}}">
         {{movie.title|e}}</a> - gave <b>{{rating*0.5}}</b> stars </div>
