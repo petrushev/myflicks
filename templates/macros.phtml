@@ -10,11 +10,11 @@
 {% macro movie_widget(movie, meta) %}
 <div>
 {% if meta %}
-  <h3>{{meta['Title'] ~' ('~ meta['Year'] ~')'}}</h3>
-  <div>Director: {{meta['Director']}}, Screenwriter: {{meta['Writer']}}</div>
-  <div>Actors: {{meta['Actors']}}</div>
+  <h3>{{meta['Title']|e ~' ('~ meta['Year'] ~')'}}</h3>
+  <div>Director: {{meta['Director']|e}}, Screenwriter: {{meta['Writer']|e}}</div>
+  <div>Actors: {{meta['Actors']|e}}</div>
 {% else %}
-  <h3>{{movie.title ~' ('~ movie.year ~')'}}</h3>
+  <h3>{{movie.title|e ~' ('~ movie.year ~')'}}</h3>
 {% endif %}
   <div>
     <img width=300 src="{{movie.get_image()}}" />
