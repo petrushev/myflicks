@@ -2,9 +2,10 @@ from datetime import datetime
 from sys import stdout
 from json import loads as json_loads
 from json import dumps as json_dumps
-from operator import and_
+from random import shuffle
 
 from werkzeug.urls import url_quote, url_quote_plus
+from sqlalchemy.sql.expression import func, and_
 from sqlalchemy.orm.exc import NoResultFound
 import requests
 
@@ -63,6 +64,9 @@ class User(BaseModel):
 
 class Movie(BaseModel):
 
+    def __repr__(self):
+        return "<Movie: %s (%d)>" % (self.title, self.year)
+
     def imdb_title_fetch(self):
         #http://www.omdbapi.com/?s=Star%20Wars&y=1977&r=JSON
         qtitle = self.title.lower()
@@ -114,7 +118,7 @@ class Movie(BaseModel):
             img_lower = img.lower()
             cond = [forbidden not in img_lower
                     for forbidden in forbidden_domains]
-            if reduce(and_, cond):
+            if all(cond):
                 self.img = img
                 return
 
@@ -134,3 +138,37 @@ class Rating(BaseModel):
                      .join(Rating).join(Movie)\
                      .order_by(Rating.rated.desc()).limit(limit).all()
         return res
+
+    @staticmethod
+    def _top_rated(session, limit, offset=9.90, appendto=tuple()):
+        # select movie_id, avg(rating) from rating group by movie_id
+        # having (avg(rating) > 9.90 and avg(rating) <=10.0);
+        top_offset = min([offset + .1, 10.0])
+        avg_ = func.avg(Rating.rating)
+        res = session.query(Rating.movie_id, avg_)\
+                     .group_by(Rating.movie_id)\
+                     .having(and_(avg_ > offset, avg_ <= top_offset))\
+                     .all()
+
+        if len(res) > 0:
+            res = tuple(res)
+            appendto = appendto + res
+            if len(appendto) >= limit:
+                appendto = list(appendto)
+                shuffle(appendto)
+                if len(appendto) > limit:
+                    appendto = appendto[:limit]
+                return appendto
+
+        return Rating._top_rated(session, limit=limit, offset=offset-0.1, appendto=appendto)
+
+    @staticmethod
+    def top_rated(session, limit=5):
+        res = Rating._top_rated(session, limit)
+        ids = [r.movie_id for r in res]
+        movies = session.query(Movie).filter(Movie.id.in_(ids)).all()
+        movies = dict((m.id, m)
+                      for m in movies)
+
+        return tuple((movies[id_], avg_)
+                     for id_, avg_ in res)

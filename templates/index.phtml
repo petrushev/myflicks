@@ -33,4 +33,47 @@
 
    <div id='partial' class="span-17" >
    </div>
+
+   <div id='strips' class="span-17" >
+     <table>
+       <tr colspan=5>
+         <td><h4>Last Rated</h4></td>
+       </tr>
+       <tr>
+         {% for user, movie_id, movie_title, rating in last_rated %}
+           <td><b>{{movie_title|e}}</b> </td>
+         {% endfor %}
+       </tr>
+       <tr>
+         {% for user, movie_id, movie_title, rating in last_rated %}
+           <td><a href="/movie/{{movie_id~'-'~url_quote(movie_title)}}" >
+               <img src="{{movies[movie_id].get_image()}}" width="105" /></a></td>
+         {% endfor %}
+       </tr>
+       <tr>
+         {% for user, movie_id, movie_title, rating in last_rated %}
+           <td>{{rating ~' stars by '~ user.alias|e }}</td>
+         {% endfor %}
+       </tr>
+       <tr colspan=5>
+         <td><h4>Top Rated</h4></td>
+       </tr>
+       <tr>
+         {% for m, avg_ in top_rated %}
+           <td><b>{{m.title|e}}</b> ({{m.year}})</td>
+         {% endfor %}
+       </tr>
+       <tr>
+         {% for m, avg_ in top_rated %}
+           <td><a href="/movie/{{m.id~'-'~url_quote(m.title)}}" >
+               <img src="{{m.get_image()}}" width="105" /></td>
+         {% endfor %}
+       </tr>
+       <tr>
+         {% for m, avg_ in top_rated %}
+           <td><b>{{ '%.2f' % avg_ }}</b></td>
+         {% endfor %}
+       </tr>
+     </table>
+   </div>
 {% endblock %}
