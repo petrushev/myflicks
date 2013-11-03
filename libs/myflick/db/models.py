@@ -11,7 +11,9 @@ import requests
 
 from myflick.db import BaseModel
 
-forbidden_domains = ('collider', 'impawards', 'imdb', 'dbcovers', 'turkcealtyazi', 'ebayimg')
+forbidden_domains = ('collider', 'impawards', 'imdb', 'dbcovers', 'turkcealtyazi', 'ebayimg',
+                     'iceposter', 'beyondhollywood', 'examiner', 'bigcommerce', 'thisdistractedglobe',
+                     'bdbphotos')
 
 class User(BaseModel):
 
