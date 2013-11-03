@@ -1,5 +1,5 @@
 from datetime import datetime
-from sys import stdout
+from sys import stderr
 from json import loads as json_loads
 from json import dumps as json_dumps
 from random import shuffle
@@ -11,7 +11,7 @@ import requests
 
 from myflick.db import BaseModel
 
-forbidden_domains = ('collider', 'impawards', 'imdb', 'dbcovers')
+forbidden_domains = ('collider', 'impawards', 'imdb', 'dbcovers', 'turkcealtyazi', 'ebayimg')
 
 class User(BaseModel):
 
@@ -82,7 +82,7 @@ class Movie(BaseModel):
             q = json_loads(q.content)['Search']
 
         except KeyError:
-            stdout.write("Error fetching: http://www.omdbapi.com/?s=%s&y=%d&r=JSON \n" % (qtitle, self.year))
+            stderr.write("Error fetching: http://www.omdbapi.com/?s=%s&y=%d&r=JSON \n" % (qtitle, self.year))
             self.meta = json_dumps({})
             self.session.flush()
             return
@@ -157,7 +157,7 @@ class Rating(BaseModel):
                 appendto = list(appendto)
                 shuffle(appendto)
                 if len(appendto) > limit:
-                    appendto = appendto[:limit]
+                    appendto[limit:] = []
                 return appendto
 
         return Rating._top_rated(session, limit=limit, offset=offset-0.1, appendto=appendto)
