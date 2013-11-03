@@ -57,7 +57,7 @@
   <div class="span-6" >
     <h4>Last rated</h4>
     {% for user, movie_id, movie_title, rating in last_rated %}
-    <div {% if loop.index % 2 == 1 %} style="background-color: #d7ebf9;" {% endif %} >
+    <div style="padding:3px; {% if loop.index % 2 == 1 %} background-color: #d7ebf9; {% endif %}" >
       <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a>
       gave <a href="/movie/{{movie_id~'-'~url_quote(movie_title)}}">{{movie_title|e}}</a>
       <b>{{rating*0.5}}</b> stars

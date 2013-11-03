@@ -27,7 +27,7 @@
         <b>{{avg_rating}}</b> stars
       <h5>Last ratings</h5>
       {% for rating, user in last_ratings %}
-        <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a> gave {{rating*0.5}} stars
+        <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a> gave {{rating*0.5}} stars <br/>
       {% endfor %}
     {% endif %}
   </div>

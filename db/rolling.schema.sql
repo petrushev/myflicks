@@ -130,10 +130,9 @@ ALTER TABLE movie
 
 -- added custom query indexes
 
-
-CREATE INDEX i_rating_rated
+CREATE INDEX CONCURRENTLY i_rating_rated
   ON rating USING btree
   (rated);
-CREATE INDEX i3_movie
+CREATE INDEX CONCURRENTLY i3_movie
   ON movie USING gist
   ((' '||title) COLLATE pg_catalog."default" gist_trgm_ops);
