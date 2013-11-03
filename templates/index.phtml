@@ -52,7 +52,7 @@
        </tr>
        <tr>
          {% for user, movie_id, movie_title, rating in last_rated %}
-           <td>{{rating ~' stars by '~ user.alias|e }}</td>
+           <td><b>{{(rating*0.5) ~'</b> by '~ user.alias|e }}</td>
          {% endfor %}
        </tr>
        <tr colspan=5>
@@ -71,7 +71,7 @@
        </tr>
        <tr>
          {% for m, avg_ in top_rated %}
-           <td><b>{{ '%.2f' % avg_ }}</b></td>
+           <td><b>{{ '%.2f' % (avg_ / 2) }}</b></td>
          {% endfor %}
        </tr>
      </table>
