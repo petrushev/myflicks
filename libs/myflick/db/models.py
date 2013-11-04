@@ -33,10 +33,51 @@ class User(BaseModel):
         session.flush()
         return u
 
+    @staticmethod
+    def save_twitter_data(session, nickname, fullname, email):
+        try:
+            u = User.load(session, nickname = nickname, service = 'twitter')
+
+        except NoResultFound:
+            u = User(nickname = nickname, service = 'twitter',
+                     fullname = fullname, email = email)
+            session.add(u)
+        else:
+            u.fullname = fullname
+            u.email = email
+
+        session.flush()
+        return u
+
+    @staticmethod
+    def save_fb_data(session, nickname, fullname, email):
+        try:
+            u = User.load(session, nickname = nickname, service = 'fb')
+
+        except NoResultFound:
+            u = User(nickname = nickname, service = 'fb',
+                     fullname = fullname, email = email)
+            session.add(u)
+        else:
+            u.fullname = fullname
+            u.email = email
+
+        session.flush()
+        return u
+
     @property
     def alias(self):
-        if self.service == 'gmail':
+        if self.service in ('gmail', 'twitter', 'fb'):
             return self.fullname
+
+        raise NotImplementedError, ' for service ' + self.service
+
+    @property
+    def home_url(self):
+        if self.service=='fb':
+            return "https://www.facebook.com/profile.php?id=%s" % self.nickname
+        if self.service=='twitter':
+            return "http://twitter.com/%s" % self.fullname
 
         raise NotImplementedError, ' for service ' + self.service
 

@@ -77,7 +77,11 @@ class BaseController(object):
                 self.response.delete_cookie('logged')
             else:
                 service, service_user_id = parsed_cookie
-                self.user = User.load(self.session, service = service, nickname = service_user_id)
+                try:
+                    user = User.load(self.session, service = service, nickname = service_user_id)
+                    self.user = user
+                except NoResultFound:
+                    self.response.delete_cookie('logged')
 
         self.view['user'] = self.user
 
