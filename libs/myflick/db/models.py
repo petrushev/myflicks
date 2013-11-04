@@ -111,28 +111,27 @@ class Movie(BaseModel):
         return "<Movie: %s (%d)>" % (self.title, self.year)
 
     def imdb_title_fetch(self):
-        #http://www.omdbapi.com/?s=Star%20Wars&y=1977&r=JSON
-        qtitle = self.title.lower()
-        if '(' in qtitle:
-            qtitle = qtitle.split('(')[0].strip()
-        if qtitle.endswith(' the'):
-            qtitle = qtitle[:-4]
-        if qtitle.endswith(' a'):
-            qtitle = qtitle[:-2]
+        if self.imdbid is None:
+            qtitle = self.title.lower()
+            if '(' in qtitle:
+                qtitle = qtitle.split('(')[0].strip()
+            if qtitle.endswith(' the'):
+                qtitle = qtitle[:-4]
+            if qtitle.endswith(' a'):
+                qtitle = qtitle[:-2]
 
-        q = requests.get("http://www.omdbapi.com/?s=%s&y=%d&r=JSON" % (qtitle, self.year))
-        try:
-            q = json_loads(q.content)['Search']
+            #                 http://www.omdbapi.com/?s=Star%20Wars&y=1977&r=JSON
+            q = requests.get("http://www.omdbapi.com/?s=%s&y=%d&r=JSON" % (qtitle, self.year))
+            try:
+                q = json_loads(q.content)['Search']
 
-        except KeyError:
-            stderr.write("Error fetching: http://www.omdbapi.com/?s=%s&y=%d&r=JSON \n" % (qtitle, self.year))
-            self.meta = json_dumps({})
-            self.session.flush()
-            return
+            except KeyError:
+                stderr.write("Error fetching: http://www.omdbapi.com/?s=%s&y=%d&r=JSON \n" % (qtitle, self.year))
+                return
 
-        imdbid = q[0]['imdbID']
-        self.imdbid = imdbid
-        q = requests.get("http://www.omdbapi.com/?i=%s&r=JSON" % imdbid)
+            self.imdbid = q[0]['imdbID']
+
+        q = requests.get("http://www.omdbapi.com/?i=%s&r=JSON" % self.imdbid)
         self.meta = q.content
         self.session.flush()
 
