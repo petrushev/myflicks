@@ -26,11 +26,11 @@ class User(BaseModel):
             u = User(nickname = profile_id, service = 'gmail',
                      fullname = fullname, email = email)
             session.add(u)
+            session.flush()
         else:
             u.fullname = fullname
             u.email = email
 
-        session.flush()
         return u
 
     @staticmethod
@@ -42,11 +42,11 @@ class User(BaseModel):
             u = User(nickname = nickname, service = 'twitter',
                      fullname = fullname, email = email)
             session.add(u)
+            session.flush()
         else:
             u.fullname = fullname
             u.email = email
 
-        session.flush()
         return u
 
     @staticmethod
@@ -58,11 +58,11 @@ class User(BaseModel):
             u = User(nickname = nickname, service = 'fb',
                      fullname = fullname, email = email)
             session.add(u)
+            session.flush()
         else:
             u.fullname = fullname
             u.email = email
 
-        session.flush()
         return u
 
     @property
