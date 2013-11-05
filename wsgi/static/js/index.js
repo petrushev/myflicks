@@ -3,32 +3,34 @@ $(document).ready(function() {
     var results_div = $("div#results");
 
     search_box.keyup(function(event){
-    var q = search_box.val();
-    if (q.length > 2) {
-        $('div#partial').html('');
-        getCachedJson('/autocomplete/movie/'+encodeURIComponent(q), function(json){
-        var html = '';
-        var ratings = {};
-        $.each(json, function(id, item) {
-            html = html + '<div class="movie" id="movie_'+item[0]+
-                '" ><span class="span-14"><a class="title" href="/movie/' +
-                item[0] + '-_" >' + item[1] +
-                '</a></span><span class="rateit" ></span></div>';
-            ratings[item[0]] = item[2];
-        });
+        var q = search_box.val();
+        if (q.length > 2) {
+            $('div#partial').html('');
+            getCachedJson('/autocomplete/movie/'+encodeURIComponent(q), function(json){
+                var html = '';
+                var ratings = {};
+                $.each(json, function(id, item) {
+                    html = html + '<div class="movie" id="movie_'+item[0]+
+                        '" ><span class="span-14"><a class="title" href="/movie/' +
+                        item[0] + '-_" >' + item[1] +
+                        '</a></span><span class="rateit" ></span></div>';
+                    ratings[item[0]] = item[2];
+                });
 
-        results_div.html(html);
-        $("span.rateit").rateit();
-        $.each($("div.movie"), function(_, div){
-            var movie_id = $(div).attr('id').replace('movie_','');
-            $(div).find("span.rateit").rateit('value', ratings[movie_id]*.5);
-        });
+                results_div.html(html);
+                if (user_id) {
+                    $("span.rateit").rateit();
+                    $.each($("div.movie"), function(_, div){
+                        var movie_id = $(div).attr('id').replace('movie_','');
+                        $(div).find("span.rateit").rateit('value', ratings[movie_id]*.5);
+                    });
+                }
 
-        $('div.movie :even').css('background-color', '#d7ebf9');
-        });
-    } else {
-        results_div.html('');
-    }
+                $('div.movie :even').css('background-color', '#d7ebf9');
+            });
+        } else {
+            results_div.html('');
+        }
     });
 
 });
