@@ -105,6 +105,15 @@ class User(BaseModel):
             r.drop()
             self.session.flush()
 
+    @staticmethod
+    def recent(session, limit=5):
+        sq = session.query(Rating.user_id, func.max(Rating.rated).label('max_rated'))\
+                    .group_by(Rating.user_id).subquery()
+        res = session.query(User)\
+                     .join((sq, sq.c.user_id==User.id))\
+                     .order_by(sq.c.max_rated).limit(limit).all()
+        return res
+
 class Movie(BaseModel):
 
     def __repr__(self):
@@ -176,9 +185,16 @@ class Rating(BaseModel):
 
     @staticmethod
     def last_rated(session, limit=10):
+        sq = session.query(Rating.movie_id.label('movie_id'),
+                           func.min(Rating.rated).label('min_rated'))\
+                    .group_by(Rating.movie_id).subquery()
+
         res = session.query(User, Movie.id, Movie.title, Rating.rating)\
-                     .join(Rating).join(Movie)\
-                     .order_by(Rating.rated.desc()).limit(limit).all()
+                     .join((Rating, Rating.user_id==User.id))\
+                     .join((Movie, Movie.id==Rating.movie_id))\
+                     .join((sq, and_(sq.c.movie_id==Movie.id,
+                                     sq.c.min_rated==Rating.rated)))\
+                     .order_by(sq.c.min_rated.desc()).limit(limit).all()
         return res
 
     @staticmethod

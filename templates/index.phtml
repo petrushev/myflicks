@@ -19,6 +19,7 @@
 {% endblock %}
 
 {% block main_body %}
+<div class="span-24">
 	<div id="search_box" class="span-17" >
 	  Search:
       <input type="input" name="q" value="{{q|e}}" />
@@ -34,33 +35,52 @@
    <div id='partial' class="span-17" >
    </div>
 
-   <div id='strips' class="span-17" >
-     <table>
-       <tr>
-         <td colspan=5 style="padding-left:100px;"><h4>Last Rated</h4></td>
-       </tr>
-       <tr>
-         {% for user, movie_id, movie_title, rating in last_rated %}
-           <td>
-             <b>{{movie_title|e}}</b> ({{movies[movie_id].year}}) <br/>
-             <a href="/movie/{{movie_id~'-'~url_quote(movie_title)}}" >
-               <img src="{{movies[movie_id].get_image()}}" width="127" /></a> <br/>
-             <b>{{(rating*0.5) ~'</b> by '~ user.alias|e }}
-           </td>
-         {% endfor %}
-       </tr>
-       <tr>
-         <td colspan=5 style="padding-left:100px;"><h4>Top Rated</h4></td>
-       </tr>
-       <tr>
-         {% for m, avg_ in top_rated %}
-           <td>
-             <b>{{m.title|e}}</b> ({{m.year}}) <br>
-             <a href="/movie/{{m.id~'-'~url_quote(m.title)}}" >
-               <img src="{{m.get_image()}}" width="127" /></a> <br/>
-             <b>{{ '%.2f' % (avg_ / 2) }}</b></td>
-         {% endfor %}
-       </tr>
-     </table>
+   <div id="top_rated_col" class="span-10" >
+     <h3>Top rated</h3>
+       {% for m, avg_ in top_rated %}
+       <div class="span-10">
+         <div class="span-4">
+           <h4>{{m.title|e ~' ('~ m.year ~')'}}</h4>
+           <a href="/movie/{{m.id~'-'~url_quote(m.title)}}" >
+            <img src="{{m.get_image()}}" width=150 /></a>
+         </div>
+
+         <div  style="padding-top:25px;">
+           {% set m_ratings = m.ratings %}
+           {% if m_ratings|count > 1 %}
+             average rating:<br/><b>{{'%.2f' % (avg_/2)}}</b> stars<br/>
+             latest ratings: <br/>
+           {% endif %}
+           {% for r in m_ratings %}
+             <a href="/user/{{r.user.id~'-'~r.user.alias_repr}}" >{{r.user.alias|e}}</a>: {{r.rating * 0.5 }} stars <br/>
+           {% endfor %}
+         </div>
+       </div>
+       {% endfor%}
    </div>
+
+   <div id="last_rated_col" class="span-6" >
+     <h3>Newly rated </h3>
+     {% for user, movie_id, movie_title, rating in last_rated[:4] %}
+     <div>
+         <h4>{{movie_title|e ~' ('~ movies[movie_id].year ~')'}}</h4>
+         <a href="/movie/{{movie_id~'-'~url_quote(movie_title)}}" >
+            <img src="{{movies[movie_id].get_image()}}" width=225 /></a>
+         <div><a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a>
+              gave <b>{{rating*0.5}}</b> stars.</div>
+     </div>
+     {% endfor %}
+   </div>
+
+   <div id="recent_users_col" class="span-5" style="margin-left:10px" >
+     <h4>Recent users</h4>
+     {% for u in recent_users %}
+       <a href="/user/{{u.id~'-'~u.alias_repr}}" >{{u.alias|e}}</a><br/>
+     {% endfor %}
+   </div>
+
+</div>
+{% endblock %}
+
+{% block right_col %}
 {% endblock %}
