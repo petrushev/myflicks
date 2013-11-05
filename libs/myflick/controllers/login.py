@@ -34,10 +34,9 @@ conf = {
 }
 
 oauth_base = environ['OAUTH_BASE']
+oauth_secrets_path_prefix = environ['OPENSHIFT_DATA_DIR'] + '/oauth_secret_'
 
 class Controller(BaseController):
-
-    auth_tokens = {'twitter': {}}
 
     def g_request(self, original_url):
         conf_ = conf['g']
@@ -112,19 +111,23 @@ class Controller(BaseController):
         del content
         del oauth_data
 
-        self.__class__.auth_tokens['twitter'][oauth_token] = oauth_token_secret
+        f = open(oauth_secrets_path_prefix + oauth_token, 'w')
+        f.write(oauth_token_secret)
+        f.close()
 
         self.redirect(conf_['authenticate'] + "?oauth_token=" + oauth_token)
 
     def twitter_callback(self, original_url):
         oauth_token = self.request.args['oauth_token']
 
-        oauth_token_secret = self.__class__.auth_tokens['twitter'].get(oauth_token)
-        if oauth_token_secret is None:
-            stderr.write("Login error : twitter token not found):\n")
+        try:
+            f = open(oauth_secrets_path_prefix + oauth_token, 'r')
+        except IOError, exc:
+            stderr.write("Login error (token not found):\n    %s\n" % str(exc))
             return self.redirect('/?msg=2')
 
-        del self.__class__.auth_tokens['twitter'][oauth_token]
+        oauth_token_secret = f.read()
+        f.close()
 
         oauth_verifier = self.request.args['oauth_verifier']
         token = oauth2.Token(oauth_token, oauth_token_secret)
@@ -150,7 +153,9 @@ class Controller(BaseController):
         User.save_twitter_data(self.session, user_id, fullname=username, email='')
         del content
 
-        self.__class__.auth_tokens['twitter'][oauth_token] = oauth_token_secret
+        f = open(oauth_secrets_path_prefix + oauth_token, 'w')
+        f.write(oauth_token_secret)
+        f.close()
 
         # set redirect to callback
         original_url = '/' + original_url
