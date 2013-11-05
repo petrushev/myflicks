@@ -52,7 +52,8 @@
              latest ratings: <br/>
            {% endif %}
            {% for r in m_ratings %}
-             <a href="/user/{{r.user.id~'-'~r.user.alias_repr}}" >{{r.user.alias|e}}</a>: {{r.rating * 0.5 }} stars <br/>
+             <a href="/user/{{r.user.id~'-'~r.user.alias_repr}}" >{{r.user.alias|e}}</a>
+               {{macros.stars(r.rating)}}<br/>
            {% endfor %}
          </div>
        </div>
@@ -64,10 +65,10 @@
      {% for user, movie_id, movie_title, rating in last_rated[:4] %}
      <div>
          <h4>{{movie_title|e ~' ('~ movies[movie_id].year ~')'}}</h4>
+         <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a>
+           {{macros.stars(rating)}}
          <a href="/movie/{{movie_id~'-'~url_quote(movie_title)}}" >
             <img src="{{movies[movie_id].get_image()}}" width=225 /></a>
-         <div><a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a>
-              gave <b>{{rating*0.5}}</b> stars.</div>
      </div>
      {% endfor %}
    </div>

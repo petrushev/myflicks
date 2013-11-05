@@ -21,3 +21,7 @@
   </div>
 </div>
 {% endmacro %}
+
+{% macro stars(rating) %}
+  <div class="rateit" data-rateit-value="{{rating/2}}" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+{% endmacro %}

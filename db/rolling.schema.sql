@@ -139,3 +139,20 @@ CREATE INDEX CONCURRENTLY i3_movie
 
 ALTER TABLE rating
   ADD CONSTRAINT u_rating_movie_rated UNIQUE (movie_id, rated);
+
+-- added function for json queries
+CREATE OR REPLACE FUNCTION json_select(data json, path text[])
+  RETURNS json AS
+$BODY$
+from json import loads, dumps
+data_ = loads(data)
+path_ = list(path)
+while path_:
+    key = path_.pop(0)
+    try:
+        data_ = data_[key]
+    except (IndexError, KeyError):
+        return None
+return dumps(data_)
+$BODY$
+  LANGUAGE plpythonu IMMUTABLE;

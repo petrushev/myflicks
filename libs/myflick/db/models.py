@@ -111,7 +111,7 @@ class User(BaseModel):
                     .group_by(Rating.user_id).subquery()
         res = session.query(User)\
                      .join((sq, sq.c.user_id==User.id))\
-                     .order_by(sq.c.max_rated).limit(limit).all()
+                     .order_by(sq.c.max_rated.desc()).limit(limit).all()
         return res
 
 class Movie(BaseModel):
