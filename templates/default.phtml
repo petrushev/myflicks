@@ -1,10 +1,15 @@
 {% extends 'base.phtml' %}
+{% import 'macros.phtml' as macros %}
 
 {% block title %}My Flicks{% endblock %}
 
 {% block scripts %}
   <script>var cdn="{{cdn}}";</script>
   {{super() }}
+
+  <link href="{{cdn}}/js/rateit/rateit.css" media="all" rel="stylesheet" type="text/css" />
+  <script src="{{cdn}}/js/rateit/jquery.rateit.min.js" ></script>
+
   <script>
     $(document).ready(function(){
       $(".button").button();
@@ -62,8 +67,8 @@
     {% for user, movie_id, movie_title, rating in last_rated %}
     <div style="padding:3px; {% if loop.index % 2 == 1 %} background-color: #d7ebf9; {% endif %}" >
       <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a>
-      gave<br/> <a href="/movie/{{movie_id~'-'~url_quote(movie_title)}}">{{movie_title|e}}</a>
-      <b>{{rating*0.5}}</b> stars
+      rated<br/> <a href="/movie/{{movie_id~'-'~url_quote(movie_title)}}">{{movie_title|e}}</a>
+      {{macros.stars(rating)}}
     </div>
     {% endfor %}
   </div>

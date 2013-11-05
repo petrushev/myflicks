@@ -4,8 +4,6 @@
 {% block scripts %}
   {{ super() }}
   {% if user %}
-    <script src="{{cdn}}/js/rateit/jquery.rateit.min.js" ></script>
-    <link href="{{cdn}}/js/rateit/rateit.css" media="all" rel="stylesheet" type="text/css" />
     <script>var user_id={{user.id}};</script>
   {% endif %}
   <script src="{{cdn}}/js/index.js" ></script>

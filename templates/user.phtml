@@ -1,4 +1,5 @@
 {% extends 'default.phtml' %}
+{% import 'macros.phtml' as macros %}
 
 {% block main_body %}
   <div>
@@ -12,14 +13,14 @@
     <div class="span-16" id="last_first_">
       {% for movie, rating in ratings1 %}
       <div><a href="/movie/{{movie.id~'-'~url_quote(movie.title)}}">
-        {{movie.title|e}}</a> - gave <b>{{rating*0.5}}</b> stars </div>
+        {{movie.title|e}}</a> {{macros.stars(rating)}}</div>
       {% endfor %}
     </div>
 
     <div class="span-16 hidden" id="best_first_">
       {% for movie, rating in ratings2 %}
       <div><a href="/movie/{{movie.id~'-'~url_quote(movie.title)}}">
-        {{movie.title|e}}</a> - gave <b>{{rating*0.5}}</b> stars </div>
+        {{movie.title|e}}</a> {{macros.stars(rating)}}</div>
       {% endfor %}
     </div>
 
