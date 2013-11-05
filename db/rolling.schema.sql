@@ -136,3 +136,6 @@ CREATE INDEX CONCURRENTLY i_rating_rated
 CREATE INDEX CONCURRENTLY i3_movie
   ON movie USING gist
   ((' '||title) COLLATE pg_catalog."default" gist_trgm_ops);
+
+ALTER TABLE rating
+  ADD CONSTRAINT u_rating_movie_rated UNIQUE (movie_id, rated);
