@@ -203,15 +203,16 @@ class Rating(BaseModel):
         # having (avg(rating) > 9.90 and avg(rating) <=10.0);
         top_offset = min([offset + .1, 10.0])
         avg_ = func.avg(Rating.rating)
+        cnt_ = func.count(Rating.user_id)
         res = session.query(Rating.movie_id, avg_)\
                      .group_by(Rating.movie_id)\
-                     .having(and_(avg_ > offset, avg_ <= top_offset))\
+                     .having(and_(cnt_ > 1, avg_ > offset, avg_ <= top_offset))\
                      .all()
 
-        if len(res) > 0:
+        if len(res) > 0 or offset < 1.0:
             res = tuple(res)
             appendto = appendto + res
-            if len(appendto) >= limit:
+            if len(appendto) >= limit or offset < 1.0:
                 appendto = list(appendto)
                 shuffle(appendto)
                 if len(appendto) > limit:

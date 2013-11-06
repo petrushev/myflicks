@@ -12,15 +12,17 @@
 
     <div class="span-16" id="last_first_">
       {% for movie, rating in ratings1 %}
-      <div><a href="/movie/{{movie.id~'-'~url_quote(movie.title)}}">
-        {{movie.title|e}}</a> {{macros.stars(rating)}}</div>
+      <div>{{macros.stars(rating)}}
+           <a href="/movie/{{movie.id~'-'~url_quote(movie.title)}}">
+           {{movie.title|e}}</a></div>
       {% endfor %}
     </div>
 
     <div class="span-16 hidden" id="best_first_">
       {% for movie, rating in ratings2 %}
-      <div><a href="/movie/{{movie.id~'-'~url_quote(movie.title)}}">
-        {{movie.title|e}}</a> {{macros.stars(rating)}}</div>
+      <div>{{macros.stars(rating)}}
+           <a href="/movie/{{movie.id~'-'~url_quote(movie.title)}}">
+           {{movie.title|e}}</a></div>
       {% endfor %}
     </div>
 

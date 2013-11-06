@@ -26,7 +26,7 @@
 
     {% if avg_rating %}
       <h5>Average rating</h5>
-        <b>{{avg_rating}}</b> stars
+        <b>{{'%.2f' % avg_rating}}</b> stars
       <h5>Last ratings</h5>
       {% for rating, user in last_ratings %}
         <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a> {{macros.stars(rating)}} <br/>

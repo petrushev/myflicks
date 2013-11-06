@@ -63,7 +63,7 @@
 {% block right_col %}
   {% block last_rated %}
   <div class="span-6" >
-    <h4>Last rated</h4>
+    <h4>Newly rated</h4>
     {% for user, movie_id, movie_title, rating in last_rated %}
     <div style="padding:3px; {% if loop.index % 2 == 1 %} background-color: #d7ebf9; {% endif %}" >
       <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a>
