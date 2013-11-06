@@ -144,6 +144,8 @@ ALTER TABLE rating
 CREATE OR REPLACE FUNCTION json_select(data json, path text[])
   RETURNS json AS
 $BODY$
+if data is None:
+    return None
 from json import loads, dumps
 data_ = loads(data)
 path_ = list(path)
@@ -156,3 +158,17 @@ while path_:
 return dumps(data_)
 $BODY$
   LANGUAGE plpythonu IMMUTABLE;
+
+-- added crew indexes
+CREATE INDEX CONCURRENTLY i3_movie_director
+  ON movie USING gist
+  ((btrim(json_select(meta, '{"Director"}')::text, '"')) COLLATE pg_catalog."default" gist_trgm_ops)
+  WHERE meta is not null;
+CREATE INDEX CONCURRENTLY i3_movie_screenwriter
+  ON movie USING gist
+  ((btrim(json_select(meta, '{"Writer"}')::text, '"')) COLLATE pg_catalog."default" gist_trgm_ops)
+  WHERE meta is not null;
+CREATE INDEX CONCURRENTLY i3_movie_actor
+  ON movie USING gist
+  ((btrim(json_select(meta, '{"Actors"}')::text, '"')) COLLATE pg_catalog."default" gist_trgm_ops)
+  WHERE meta is not null;

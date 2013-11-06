@@ -30,7 +30,11 @@ routes = [
         Rule('/movie/missing', endpoint='fill_missing', methods=['POST'])]),
     EndpointPrefix('user|', [
         Rule('/user/<int:user_id>-<path:dummy>', endpoint='show', methods=['GET']),
-        Rule('/home', endpoint='home', methods=['GET'])])
+        Rule('/home', endpoint='home', methods=['GET'])]),
+    EndpointPrefix('cast|', [
+        Rule('/director/<path:fullname>', defaults = {'crew': 'director'}, endpoint='show', methods=['GET']),
+        Rule('/screenwriter/<path:fullname>', defaults = {'crew': 'screenwriter'}, endpoint='show', methods=['GET']),
+        Rule('/actor/<path:fullname>', defaults = {'crew': 'actor'}, endpoint='show', methods=['GET'])])
 ]
 
 url_map = Map(routes, strict_slashes = False)
