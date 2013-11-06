@@ -7,12 +7,29 @@
 </div>
 {% endmacro %}
 
+{% macro movie_meta(meta) %}
+  <div>
+      Director:
+    {% for d in meta['Director'].split(', ') %}
+      <a href="/director/{{url_quote(d)}}" >{{d|e}}</a>,
+    {% endfor %}
+      Screenwriter:
+    {% for d in meta['Writer'].split(', ') %}
+      <a href="/screenwriter/{{url_quote(d)}}" >{{d|e}}</a>,
+    {% endfor %}
+    </div>
+  <div>Actors:
+    {% for d in meta['Actors'].split(', ') %}
+      <a href="/actor/{{url_quote(d)}}" >{{d|e}}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </div>
+{% endmacro %}
+
 {% macro movie_widget(movie, meta) %}
 <div>
 {% if meta %}
   <h3>{{meta['Title']|e ~' ('~ meta['Year'] ~')'}}</h3>
-  <div>Director: {{meta['Director']|e}}, Screenwriter: {{meta['Writer']|e}}</div>
-  <div>Actors: {{meta['Actors']|e}}</div>
+  {{ movie_meta(meta) }}
 {% else %}
   <h3>{{movie.title|e ~' ('~ movie.year ~')'}}</h3>
 {% endif %}

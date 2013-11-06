@@ -1,0 +1,68 @@
+{% extends 'default.phtml' %}
+{% import 'macros.phtml' as macros %}
+
+{% block title %}{{fullname|e ~' - '~ crew ~' @ '~ super() }}{% endblock %}
+
+{% block main_body %}
+  <div class="span-17" >
+    <b>{{crew}}</b>
+    <h3>{{fullname}}</h3>
+  </div>
+
+  <div class="span-18" >
+  <div class="span-9" >
+  {% for m, avg_rating, rev_cnt in movies[::2] %}
+    <div class="span-9">
+      <div class="span-3">
+        <a href="/movie/{{m.id~'-'~url_quote(m.title)}}" ><img src="{{m.get_image()}}" width="108" /></a>
+      </div>
+      <div class="span-6 last">
+        <b>{{m.title ~' ('~ m.year ~')'}}</b>
+        {% set meta = m.meta %}
+        {% if meta %}
+          <div style="font-size:95%; line-height:1.06em;" >{{ macros.movie_meta(meta) }}</div>
+        {% endif %} <br/>
+
+        {% if rev_cnt is none %}
+          no ratings yet
+        {% elif rev_cnt == 1 %}
+          one rating: {{macros.stars(avg_rating/2) }}
+        {% else %}
+          average: <b>{{'%.2f' % (avg_rating/2)}}</b> stars <br/>
+          from {{rev_cnt}} users
+        {% endif %}
+
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+
+  <div class="span-9 last" >
+  {% for m, avg_rating, rev_cnt in movies[1::2] %}
+    <div class="span-9">
+      <div class="span-3">
+        <a href="/movie/{{m.id~'-'~url_quote(m.title)}}" ><img src="{{m.get_image()}}" width="108" /></a>
+      </div>
+      <div class="span-6 last">
+        <b>{{m.title ~' ('~ m.year ~')'}}</b>
+        {% set meta = m.meta %}
+        {% if meta %}
+          <div style="font-size:95%; line-height:1.06em;" >{{ macros.movie_meta(meta) }}</div>
+        {% endif %} <br/>
+
+        {% if rev_cnt is none %}
+          no ratings yet
+        {% elif rev_cnt == 1 %}
+          one rating: {{macros.stars(avg_rating/2) }}
+        {% else %}
+          average: <b>{{'%.2f' % (avg_rating/2)}}</b> stars <br/>
+          from {{rev_cnt}} users
+        {% endif %}
+
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+
+  </div>
+{% endblock %}
