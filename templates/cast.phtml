@@ -18,7 +18,7 @@
       </div>
       <div class="span-6 last">
         <b>{{m.title ~' ('~ m.year ~')'}}</b>
-        {% set meta = m.meta %}
+        {% set meta = m.get_meta() %}
         {% if meta %}
           <div style="font-size:95%; line-height:1.06em;" >{{ macros.movie_meta(meta) }}</div>
         {% endif %} <br/>
@@ -45,7 +45,7 @@
       </div>
       <div class="span-6 last">
         <b>{{m.title ~' ('~ m.year ~')'}}</b>
-        {% set meta = m.meta %}
+        {% set meta = m.get_meta() %}
         {% if meta %}
           <div style="font-size:95%; line-height:1.06em;" >{{ macros.movie_meta(meta) }}</div>
         {% endif %} <br/>
