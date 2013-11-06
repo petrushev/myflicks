@@ -26,12 +26,11 @@
         {% if rev_cnt is none %}
           no ratings yet
         {% elif rev_cnt == 1 %}
-          one rating: {{macros.stars(avg_rating/2) }}
+          one rating: {{macros.stars(avg_rating) }}
         {% else %}
-          average: <b>{{'%.2f' % (avg_rating/2)}}</b> stars <br/>
+          average: <b>{{macros.stars(avg_rating)}}</b> stars <br/>
           from {{rev_cnt}} users
         {% endif %}
-
       </div>
     </div>
   {% endfor %}
@@ -53,12 +52,11 @@
         {% if rev_cnt is none %}
           no ratings yet
         {% elif rev_cnt == 1 %}
-          one rating: {{macros.stars(avg_rating/2) }}
+          one rating: {{macros.stars(avg_rating) }}
         {% else %}
-          average: <b>{{'%.2f' % (avg_rating/2)}}</b> stars <br/>
+          average: <b>{{macros.stars(avg_rating)}}</b> stars <br/>
           from {{rev_cnt}} users
         {% endif %}
-
       </div>
     </div>
   {% endfor %}

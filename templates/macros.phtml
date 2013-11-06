@@ -40,5 +40,6 @@
 {% endmacro %}
 
 {% macro stars(rating) %}
-  <div class="rateit" data-rateit-value="{{rating/2}}" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+  <div class="rateit" data-rateit-value="{{rating/2}}" data-rateit-ispreset="true"
+       data-rateit-readonly="true" title="{{'%.2f' % (rating/2)}}"></div>
 {% endmacro %}

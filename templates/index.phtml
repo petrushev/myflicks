@@ -46,7 +46,7 @@
          <div  style="padding-top:25px;">
            {% set m_ratings = m.ratings %}
            {% if m_ratings|count > 1 %}
-             average rating:<br/><b>{{'%.2f' % (avg_/2)}}</b> stars<br/>
+             average {{macros.stars(avg_)}}<br/><br/>
              latest ratings: <br/>
            {% endif %}
            {% for r in m_ratings %}

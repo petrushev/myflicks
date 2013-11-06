@@ -13,7 +13,7 @@ from myflick.db import BaseModel
 
 forbidden_domains = ('collider', 'impawards', 'imdb', 'dbcovers', 'turkcealtyazi', 'ebayimg',
                      'iceposter', 'beyondhollywood', 'examiner', 'bigcommerce', 'thisdistractedglobe',
-                     'bdbphotos', 'mposter', 'images-amazon')
+                     'bdbphotos', 'mposter', 'images-amazon', 'audiorushes')
 
 class User(BaseModel):
 
