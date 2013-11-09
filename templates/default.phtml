@@ -64,7 +64,7 @@
   {% block last_rated %}
   <div class="span-6" >
     <h4>Newly rated</h4>
-    {% for user, movie_id, movie_title, rating in last_rated %}
+    {% for user, movie_id, movie_title, rating in last_rated[:7] %}
     <div style="padding:3px; {% if loop.index % 2 == 1 %} background-color: #d7ebf9; {% endif %}" >
       <a href="/user/{{user.id~'-'~user.alias_repr}}" >{{user.alias|e}}</a>
       rated<br/> <a href="/movie/{{movie_id~'-'~url_quote(movie_title)}}">{{movie_title|e}}</a>
