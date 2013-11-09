@@ -1,4 +1,5 @@
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -10,13 +11,28 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 CREATE OR REPLACE PROCEDURAL LANGUAGE plpythonu;
 
-ALTER PROCEDURAL LANGUAGE plpythonu OWNER TO postgres;
-
 CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 
 COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
 
 SET search_path = public, pg_catalog;
+
+CREATE FUNCTION json_select(data json, path text[]) RETURNS json
+    LANGUAGE plpythonu IMMUTABLE
+    AS $$
+if data is None:
+    return None
+from json import loads, dumps
+data_ = loads(data)
+path_ = list(path)
+while path_:
+    key = path_.pop(0)
+    try:
+        data_ = data_[key]
+    except (IndexError, KeyError):
+        return None
+return dumps(data_)
+$$;
 
 SET default_tablespace = '';
 
@@ -25,12 +41,11 @@ SET default_with_oids = false;
 CREATE TABLE movie (
     id integer NOT NULL,
     title character varying(1023) NOT NULL,
-    url character varying(2047) NOT NULL,
     meta json,
-    CONSTRAINT ch_movie_url CHECK ((((url)::text !~~ '%://'::text) AND (((url)::text ~~* 'http://%'::text) OR ((url)::text ~~* 'https://%'::text))))
+    imdbid character varying(31),
+    year smallint NOT NULL,
+    img text
 );
-
-ALTER TABLE public.movie OWNER TO postgres;
 
 CREATE SEQUENCE movie_id_seq
     START WITH 1
@@ -38,8 +53,6 @@ CREATE SEQUENCE movie_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-
-ALTER TABLE public.movie_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE movie_id_seq OWNED BY movie.id;
 
@@ -51,8 +64,6 @@ CREATE TABLE rating (
     CONSTRAINT ch_rating CHECK (((rating >= 0) AND (rating <= 10)))
 );
 
-ALTER TABLE public.rating OWNER TO postgres;
-
 CREATE TABLE "user" (
     id integer NOT NULL,
     nickname character varying(128) NOT NULL,
@@ -61,8 +72,6 @@ CREATE TABLE "user" (
     email character varying(64)
 );
 
-ALTER TABLE public."user" OWNER TO postgres;
-
 CREATE SEQUENCE user_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -70,17 +79,16 @@ CREATE SEQUENCE user_id_seq
     NO MAXVALUE
     CACHE 1;
 
-ALTER TABLE public.user_id_seq OWNER TO postgres;
-
 ALTER SEQUENCE user_id_seq OWNED BY "user".id;
+
+CREATE TABLE watchlist (
+    user_id integer NOT NULL,
+    movie_id integer NOT NULL
+);
 
 ALTER TABLE ONLY movie ALTER COLUMN id SET DEFAULT nextval('movie_id_seq'::regclass);
 
 ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regclass);
-
-SELECT pg_catalog.setval('movie_id_seq', 1, false);
-
-SELECT pg_catalog.setval('user_id_seq', 1, true);
 
 ALTER TABLE ONLY movie
     ADD CONSTRAINT p_movie PRIMARY KEY (id);
@@ -91,17 +99,38 @@ ALTER TABLE ONLY rating
 ALTER TABLE ONLY "user"
     ADD CONSTRAINT p_user PRIMARY KEY (id);
 
-ALTER TABLE ONLY movie
-    ADD CONSTRAINT u_movie UNIQUE (title);
+ALTER TABLE ONLY watchlist
+    ADD CONSTRAINT p_watchlist PRIMARY KEY (user_id, movie_id);
 
 ALTER TABLE ONLY movie
-    ADD CONSTRAINT u_movie_url UNIQUE (url);
+    ADD CONSTRAINT u_movie UNIQUE (title, year);
+
+ALTER TABLE ONLY rating
+    ADD CONSTRAINT u_rating_movie_rated UNIQUE (movie_id, rated);
 
 ALTER TABLE ONLY "user"
     ADD CONSTRAINT u_user UNIQUE (nickname, service);
+
+CREATE INDEX i3_movie ON movie USING gist (((' '::text || (title)::text)) gist_trgm_ops);
+
+CREATE INDEX i3_movie_2 ON movie USING gist ((((' '::text || lower((title)::text)) || ' '::text)) gist_trgm_ops);
+
+CREATE INDEX i3_movie_actor ON movie USING gist (btrim((json_select(meta, '{Actors}'::text[]))::text, '"'::text) gist_trgm_ops) WHERE (meta IS NOT NULL);
+
+CREATE INDEX i3_movie_director ON movie USING gist (btrim((json_select(meta, '{Director}'::text[]))::text, '"'::text) gist_trgm_ops) WHERE (meta IS NOT NULL);
+
+CREATE INDEX i3_movie_screenwriter ON movie USING gist (btrim((json_select(meta, '{Writer}'::text[]))::text, '"'::text) gist_trgm_ops) WHERE (meta IS NOT NULL);
+
+CREATE INDEX i_rating_rated ON rating USING btree (rated);
 
 ALTER TABLE ONLY rating
     ADD CONSTRAINT fk_rating_movie FOREIGN KEY (movie_id) REFERENCES movie(id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
 ALTER TABLE ONLY rating
     ADD CONSTRAINT fk_rating_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+ALTER TABLE ONLY watchlist
+    ADD CONSTRAINT fk_watchlist_movie FOREIGN KEY (movie_id) REFERENCES movie(id) ON UPDATE CASCADE ON DELETE RESTRICT;
+
+ALTER TABLE ONLY watchlist
+    ADD CONSTRAINT fk_watchlist_user FOREIGN KEY (user_id) REFERENCES "user"(id) ON UPDATE CASCADE ON DELETE RESTRICT;
