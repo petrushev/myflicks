@@ -1,0 +1,15 @@
+{% extends 'default.phtml' %}
+{% import 'macros.phtml' as macros %}
+
+{% block scripts %}
+  {{ super() }}
+  <script>var user_id={{user.id}};</script>
+{% endblock %}
+
+{% block main_body %}
+  <div>  {{user.fullname}}'s watchlist: </div>
+
+  {% for m in user.watchlist %}
+    <a href="/movie/{{m.id}}-_" >{{m.title}}</a>
+  {% endfor %}
+{% endblock %}

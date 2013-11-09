@@ -22,6 +22,13 @@
     <div class="movie" id="movie_{{movie.id}}" >
       you rate:<span class="rateit" ></span>
     </div>
+      {% if rating %}
+      {% else %}
+      <div>
+        <label for="toggle_watchlist">watchlist:</label>
+        <input type="checkbox" id="toggle_watchlist" {% if movie in user.watchlist %}checked{% endif %} />
+      </div>
+      {% endif %}
     {% endif %}
 
     {% if avg_rating %}
@@ -51,6 +58,10 @@
 
     rater.live("reset", function() {
       $.post('/user/rate', {movie_id: movie_id, rating: 0}, function(response){});
+    });
+
+    $("#toggle_watchlist").click(function(){
+      $.post('/my/togglewatchlist', {movie_id: movie_id}, function(response){});
     });
 
   </script >

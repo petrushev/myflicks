@@ -24,3 +24,8 @@ mappers['Rating'].add_properties({
                           backref=backref('ratings', order_by=models.Rating.rated.desc())),
     'user': relationship(models.User,
                          backref=backref('ratings', order_by=models.Rating.rated.desc()))})
+
+mappers['User'].add_properties({
+    'watchlist': relationship(models.Movie,
+                              secondary=tables['watchlist'],
+                              collection_class=set)})

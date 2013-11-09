@@ -34,7 +34,10 @@ routes = [
     EndpointPrefix('cast|', [
         Rule('/director/<path:fullname>', defaults = {'crew': 'director'}, endpoint='show', methods=['GET']),
         Rule('/screenwriter/<path:fullname>', defaults = {'crew': 'screenwriter'}, endpoint='show', methods=['GET']),
-        Rule('/actor/<path:fullname>', defaults = {'crew': 'actor'}, endpoint='show', methods=['GET'])])
+        Rule('/actor/<path:fullname>', defaults = {'crew': 'actor'}, endpoint='show', methods=['GET'])]),
+    EndpointPrefix('my|', [
+        Rule('/my/watchlist', endpoint='watchlist', methods=['GET']),
+        Rule('/my/togglewatchlist', endpoint='togglewatchlist', methods=['POST'])])
 ]
 
 url_map = Map(routes, strict_slashes = False)
