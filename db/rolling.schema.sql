@@ -172,3 +172,18 @@ CREATE INDEX CONCURRENTLY i3_movie_actor
   ON movie USING gist
   ((btrim(json_select(meta, '{"Actors"}')::text, '"')) COLLATE pg_catalog."default" gist_trgm_ops)
   WHERE meta is not null;
+
+-- added watchlist table
+CREATE TABLE watchlist
+(
+  user_id integer NOT NULL,
+  movie_id integer NOT NULL,
+  CONSTRAINT p_watchlist PRIMARY KEY (user_id, movie_id),
+  CONSTRAINT fk_watchlist_movie FOREIGN KEY (movie_id)
+      REFERENCES movie (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT fk_watchlist_user FOREIGN KEY (user_id)
+      REFERENCES "user" (id) MATCH SIMPLE
+      ON UPDATE CASCADE ON DELETE RESTRICT
+)
+WITH (OIDS=FALSE);

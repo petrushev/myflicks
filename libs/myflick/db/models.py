@@ -13,7 +13,7 @@ from myflick.db import BaseModel
 
 forbidden_domains = ('collider', 'impawards', 'imdb', 'dbcovers', 'turkcealtyazi', 'ebayimg',
                      'iceposter', 'beyondhollywood', 'examiner', 'bigcommerce', 'thisdistractedglobe',
-                     'bdbphotos', 'mposter', 'images-amazon', 'audiorushes')
+                     'bdbphotos', 'mposter', 'images-amazon', 'audiorushes', 'movieposterdb')
 
 class User(BaseModel):
 
@@ -95,6 +95,11 @@ class User(BaseModel):
         else:
             r.rating = rating
             r.rated = datetime.utcnow()
+
+        # drop from watchlist
+        if movie in self.watchlist:
+            self.watchlist.remove(movie)
+            self.session.flush()
 
     def drop_rating(self, movie):
         try:
@@ -231,3 +236,6 @@ class Rating(BaseModel):
 
         return tuple((movies[id_], avg_)
                      for id_, avg_ in res)
+
+class Watchlist(BaseModel):
+    pass
