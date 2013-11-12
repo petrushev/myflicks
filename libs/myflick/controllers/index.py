@@ -33,13 +33,13 @@ class Controller(BaseController):
         self.view['recent_users'] = User.recent(self.session, limit=8)
 
         # recent ratings
-        already_shown = ids
-        already_shown.extend(set(m.id for m, _ in top_rated))
+        already_shown = set(ids)
+        already_shown.update((m.id for m, _ in top_rated))
         recent = self.session.query(Rating)\
                      .options(joinedload(Rating.movie))\
                      .options(joinedload(Rating.user))\
                      .filter(not_(Rating.movie_id.in_(already_shown)))\
-                     .order_by(Rating.rated).limit(20).all()
+                     .order_by(Rating.rated).limit(15).all()
         shuffle(recent)
         recent[10:] = []
         self.view['recent_ratings'] = recent

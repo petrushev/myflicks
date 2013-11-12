@@ -7,9 +7,12 @@
 {% endblock %}
 
 {% block main_body %}
-  <div>  {{user.fullname}}'s watchlist: </div>
+  <div>your watchlist: </div>
 
   {% for m in user.watchlist %}
     <a href="/movie/{{m.id}}-_" >{{m.title}}</a>
+      {% if m.id in avg_rating %}
+        average: {{macros.stars(avg_rating[m.id])}}
+      {% endif %}<br/>
   {% endfor %}
 {% endblock %}
