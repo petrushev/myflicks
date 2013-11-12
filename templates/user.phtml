@@ -8,7 +8,7 @@
     <div class="span-17 last" >
       <a href="#" id="last_first" >new ratings first</a> |
       <a href="#" id="best_first" >high ratings first</a> |
-      <a href="#" id="wishlist" >wishlist</a>
+      <a href="#" id="watchlist" >watchlist</a>
     </div> <br/> <br/>
 
     <div class="span-17 last" id="last_first_">
@@ -27,8 +27,8 @@
       {% endfor %}
     </div>
 
-    <div class="span-17 last hidden" id="wishlist_" >
-      {% for m in user.watchlist|sort %}
+    <div class="span-17 last hidden" id="watchlist_" >
+      {% for m in watchlist|sort %}
       <div><a href="/movie/{{m.id~'-'~url_quote(m.title)}}">
            {{m.title|e}}</a></div>
       {% endfor %}
@@ -38,19 +38,19 @@
     $("a#last_first").click(function(){
       $("div#last_first_").show();
       $("div#best_first_").hide();
-      $("div#wishlist_").hide();
+      $("div#watchlist_").hide();
       return false;
     });
     $("a#best_first").click(function(){
       $("div#best_first_").show();
       $("div#last_first_").hide();
-      $("div#wishlist_").hide();
+      $("div#watchlist_").hide();
       return false;
     });
-    $("a#wishlist").click(function(){
+    $("a#watchlist").click(function(){
       $("div#best_first_").hide();
       $("div#last_first_").hide();
-      $("div#wishlist_").show();
+      $("div#watchlist_").show();
       return false;
     });
 
