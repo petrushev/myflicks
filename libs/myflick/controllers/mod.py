@@ -46,7 +46,7 @@ class Controller(BaseController):
 
         movie.title = title
         movie.year = year
-        movie.poster = poster
+        movie.img = poster
 
         meta['Director'] = reformat_cast(director)
         meta['Screenwriter'] = reformat_cast(screenwriter)
