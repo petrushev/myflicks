@@ -33,13 +33,13 @@
 {% endblock %}
 
 {% block header %}
-  <div id="main_menu" class="span-18 buttonset">
+  <div id="main_menu" class="span-15 buttonset">
   {% block menu %}
     <a href="/" class="button" >My Flicks</a>
   {% endblock %}
   </div>
 
-  <div class="span-5" >
+  <div class="span-8" >
   {% block user_box %}
     {% if user is none %}
     <div>
@@ -49,9 +49,11 @@
       <a href="/login/fb/{{path[1:]}}" title="facebook"><img src="{{cdn}}/img/fb-icon.png" /></a>
     </div>
     {% else %}
-      <div style="margin-top: 10px;">
-        welcome, {{ user.fullname }}
+      <div style="margin-top: 10px; float:right;">
+        <div style="" >welcome, {{ user.fullname }}</div>
         <div style="float:right;" class="buttonset">
+          {% block mod_box %}{% endblock %}
+          <a href="/my/watchlist" class="button">Watchlist</a>
           <a href="/login/logout/{{path[1:]}}" class="button">Logout</a>
         </div>
       </div>

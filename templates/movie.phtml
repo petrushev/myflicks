@@ -57,3 +57,11 @@
 {% endif %}
 
 {% endblock %}
+
+{% block mod_box %}
+  {% if user %}
+    {% if user.is_mod() %}
+      <a href="/mod/movie/{{movie.id}}" >Edit</a>
+    {% endif %}
+  {% endif %}
+{% endblock %}
