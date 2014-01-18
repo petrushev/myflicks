@@ -3,6 +3,7 @@ from sys import stderr
 from json import loads as json_loads
 from json import dumps as json_dumps
 from random import shuffle
+from os import environ
 
 from werkzeug.urls import url_quote, url_quote_plus
 from sqlalchemy.sql.expression import func, and_
@@ -14,6 +15,8 @@ from myflick.db import BaseModel
 forbidden_domains = ('collider', 'impawards', 'imdb', 'dbcovers', 'turkcealtyazi', 'ebayimg',
                      'iceposter', 'beyondhollywood', 'examiner', 'bigcommerce', 'thisdistractedglobe',
                      'bdbphotos', 'mposter', 'images-amazon', 'audiorushes', 'movieposterdb')
+
+MODS = environ['MODS']
 
 class User(BaseModel):
 
@@ -118,6 +121,11 @@ class User(BaseModel):
                      .join((sq, sq.c.user_id==User.id))\
                      .order_by(sq.c.max_rated.desc()).limit(limit).all()
         return res
+
+    def is_mod(self):
+        modlist = MODS.split(';')
+        return ('%s|%s' % (self.nickname, self.service)) in modlist
+
 
 class Movie(BaseModel):
 
