@@ -39,7 +39,7 @@ class Controller(BaseController):
                      .options(joinedload(Rating.movie))\
                      .options(joinedload(Rating.user))\
                      .filter(not_(Rating.movie_id.in_(already_shown)))\
-                     .order_by(Rating.rated).limit(15).all()
+                     .order_by(Rating.rated.desc()).limit(15).all()
         shuffle(recent)
         recent[10:] = []
         self.view['recent_ratings'] = recent
