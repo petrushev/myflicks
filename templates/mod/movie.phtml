@@ -1,0 +1,43 @@
+{% extends 'mod/base.phtml' %}
+
+{% block main_body %}
+  <style>
+  input[type=text] {width:300px;}
+  </style>
+
+  <div>
+    <form method="post" >
+      <table>
+        <tr>
+          <td>Title</td>
+          <td><input type="text" name="title" value="{{movie.title|e}}" /></td>
+        </tr>
+        <tr>
+          <td>Year</td>
+          <td><input type="text" name="year" value="{{movie.year|e}}" /></td>
+        </tr>
+        <tr>
+          <td>Poster</td>
+          <td><input type="text" name="poster" value="{{movie.img|e}}" /></td>
+        </tr>
+        <tr><td colspan=2 ><span class="small" >(comma separated)</span></td></tr>
+        <tr>
+          <td>Director</td>
+          <td><input type="text" name="director" value="{{meta['Director']|e}}" /></td>
+        </tr>
+        <tr>
+          <td>Screenwriter</td>
+          <td><input type="text" name="screenwriter" value="{{meta['Writer']|e}}" /></td>
+        </tr>
+        <tr>
+          <td>Actors</td>
+          <td><input type="text" name="actors"  value="{{meta['Actors']|e}}" /></td>
+        </tr>
+
+
+      </table>
+      <input type="submit" class="button" value="ok" />
+    </form>
+  </div>
+
+{% endblock %}
