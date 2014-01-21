@@ -1,4 +1,4 @@
-from operator import itemgetter
+from operator import itemgetter, attrgetter
 
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql.expression import and_
@@ -7,6 +7,7 @@ from myflick.controllers import BaseController
 from myflick.db.models import Movie, Rating, User
 
 key1 = itemgetter(1)
+getter_title = attrgetter('title')
 
 class Controller(BaseController):
 
@@ -25,9 +26,13 @@ class Controller(BaseController):
                       .join((Rating, and_(Rating.movie_id==Movie.id,
                                           Rating.user_id==user_.id)))\
                       .order_by(Rating.rated.desc()).all()
+
+        watchlist = sorted(user_.watchlist, key=getter_title)
+
         self.view.update({'user_': user_,
                           'ratings1': ratings,
-                          'ratings2': sorted(ratings, key=key1, reverse=True)})
+                          'ratings2': sorted(ratings, key=key1, reverse=True),
+                          'watchlist': watchlist})
         self.template = 'user.phtml'
 
     def home(self):

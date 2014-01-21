@@ -67,7 +67,7 @@ class BaseController(object):
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
 
-        self.view['last_rated'] = Rating.last_rated(self.session, limit=7)
+        self.view['last_rated'] = Rating.last_rated(self.session, limit=17)
 
         # check user data
         self.user = None
