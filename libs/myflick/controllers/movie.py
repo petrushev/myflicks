@@ -74,11 +74,12 @@ class Controller(BaseController):
         try:
             movie = Movie.load(self.session, title=title, year=year)
         except NoResultFound:
-            movie = Movie(title=title, year=year, meta=content, imdbid=imdbid)
+            movie = Movie(title=title, year=year, meta=content_json, imdbid=imdbid)
             self.session.add(movie)
             self.session.flush()
         else:
-            movie.meta=content
+            movie.meta=content_json
             movie.imdbid=imdbid
+
 
         return self.redirect('/movie/%d-%s' % (movie.id, url_quote(movie.title)))

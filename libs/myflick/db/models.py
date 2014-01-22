@@ -154,7 +154,7 @@ class Movie(BaseModel):
             self.imdbid = q[0]['imdbID']
 
         q = requests.get("http://www.omdbapi.com/?i=%s&r=JSON" % self.imdbid)
-        self.meta = q.content
+        self.meta = json_loads(q.content)
         self.session.flush()
 
     def get_meta(self):
