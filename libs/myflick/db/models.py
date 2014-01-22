@@ -158,7 +158,7 @@ class Movie(BaseModel):
         self.session.flush()
 
     def get_meta(self):
-        if self.meta is None:
+        if self.meta is None or self.meta=={} or self.meta=='{}':
             self.imdb_title_fetch()
             if self.meta is None:
                 return {}
