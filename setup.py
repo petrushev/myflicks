@@ -6,6 +6,6 @@ setup(name='myflick',
       author='Baze Petrushev',
       author_email='b.petrushev@gmail.com',
       url='http://www.python.org/sigs/distutils-sig/',
-      install_requires=['psycopg2', 'Werkzeug', 'Jinja2', 'SQLAlchemy',
+      install_requires=['psycopg2', 'Werkzeug', 'Jinja2', 'SQLAlchemy == 0.9.1',
                         'oauth2', 'requests', 'lxml']
 )

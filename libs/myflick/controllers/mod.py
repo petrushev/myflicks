@@ -37,10 +37,9 @@ class Controller(BaseController):
         except NoResultFound:
             return self.not_found('error/404.phtml')
 
-        meta = movie.get_meta()
 
-        title, year, poster, director, screenwriter, actors = [self.request.form[key]
-            for key in 'title, year, poster, director, screenwriter, actors'.split(', ')]
+        title, year, poster, director, screenwriter, actors, imdbid = [self.request.form[key]
+            for key in 'title, year, poster, director, screenwriter, actors, imdbid'.split(', ')]
 
         year = int(year)
 
@@ -48,10 +47,20 @@ class Controller(BaseController):
         movie.year = year
         movie.img = poster
 
-        meta['Director'] = reformat_cast(director)
-        meta['Screenwriter'] = reformat_cast(screenwriter)
-        meta['Actors'] = reformat_cast(actors)
+        if imdbid==movie.imdbid:
+            meta = movie.get_meta()
+            meta['Director'] = reformat_cast(director)
+            meta['Screenwriter'] = reformat_cast(screenwriter)
+            meta['Actors'] = reformat_cast(actors)
+            movie.meta = json.dumps(meta)
 
-        movie.meta = json.dumps(meta)
+        else:
+            imdbid = imdbid.strip()
+            if 'imdb.com' in imdbid:
+                imdbid = imdbid.split("title/")[1].split("/")[0]
+
+            movie.imdbid = imdbid
+            movie.meta = None
+            movie.get_meta()
 
         return self.redirect('/mod/movie/%d' % movie_id)
