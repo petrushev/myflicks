@@ -52,7 +52,7 @@ class Controller(BaseController):
             meta['Director'] = reformat_cast(director)
             meta['Screenwriter'] = reformat_cast(screenwriter)
             meta['Actors'] = reformat_cast(actors)
-            movie.meta = json.dumps(meta)
+            movie.meta = meta
 
         else:
             imdbid = imdbid.strip()
