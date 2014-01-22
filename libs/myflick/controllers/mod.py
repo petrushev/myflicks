@@ -48,9 +48,9 @@ class Controller(BaseController):
         movie.img = poster
 
         if imdbid==movie.imdbid:
-            meta = movie.get_meta()
+            meta = dict(movie.get_meta())
             meta['Director'] = reformat_cast(director)
-            meta['Screenwriter'] = reformat_cast(screenwriter)
+            meta['Writer'] = reformat_cast(screenwriter)
             meta['Actors'] = reformat_cast(actors)
             movie.meta = meta
 
@@ -62,5 +62,7 @@ class Controller(BaseController):
             movie.imdbid = imdbid
             movie.meta = None
             movie.get_meta()
+
+        self.session.flush()
 
         return self.redirect('/mod/movie/%d' % movie_id)
