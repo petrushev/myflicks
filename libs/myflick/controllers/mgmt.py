@@ -20,7 +20,7 @@ class Controller(BaseController):
                 existing = self.session.query(Movie.title, Movie.year)\
                                .filter(tuple_(Movie.title, Movie.year).in_(batch)).all()
                 new_ = batch.difference(existing)
-                new_ = [Movie(title=title, year=year) for title, year in new_]
+                new_ = [Movie(title=title, year=year, meta={}) for title, year in new_]
                 self.session.add_all(new_)
                 self.session.commit()
 
